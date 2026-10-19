@@ -3,5 +3,5 @@ torch
 torchvision
 timm
 streamlit
-anthropic
+google-genai
 pillow

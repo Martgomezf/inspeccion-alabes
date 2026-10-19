@@ -6,7 +6,7 @@ Aplicación web que clasifica fotos de álabes de motores de avión en 5 clases 
 
 ## Flujo
 
-📷 Imagen → 🧠 EfficientNet-B0 (clase + confianza) → 📊 Resultado visual → 💬 Claude Haiku → ✅ Recomendación
+📷 Imagen → 🧠 EfficientNet-B0 (clase + confianza) → 📊 Resultado visual → 💬 Gemini Flash → ✅ Recomendación
 
 ## Dataset
 
@@ -40,7 +40,7 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-Requiere la variable `ANTHROPIC_API_KEY` (en `.streamlit/secrets.toml` o como variable de entorno) para generar recomendaciones.
+Requiere la variable `GEMINI_API_KEY` (en `.streamlit/secrets.toml` o como variable de entorno) para generar recomendaciones.
 
 ## Aviso
 

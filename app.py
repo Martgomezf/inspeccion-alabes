@@ -8,7 +8,11 @@ import timm
 import streamlit as st
 from PIL import Image
 from torchvision import transforms
-import anthropic
+from google import genai
+from google.genai import types
+
+# Modelos Gemini Flash (plan gratuito), en orden de preferencia
+MODELOS_GEMINI = ["gemini-flash-latest", "gemini-3.8-flash", "gemini-3.6-flash"]
 
 st.set_page_config(page_title="Inspección de álabes", page_icon="✈️", layout="wide")
 
@@ -85,9 +89,9 @@ def clasificar(imagen):
 # ---------- 2. LLM ----------
 def obtener_api_key():
     try:
-        return st.secrets["ANTHROPIC_API_KEY"]
+        return st.secrets["GEMINI_API_KEY"]
     except Exception:
-        return os.environ.get("ANTHROPIC_API_KEY")
+        return os.environ.get("GEMINI_API_KEY")
 
 
 def recomendar(clase, confianza, resultados, revision):
@@ -103,17 +107,20 @@ def recomendar(clase, confianza, resultados, revision):
     api_key = obtener_api_key()
     if not api_key:
         return "Falta configurar la API key del LLM. Consulte a un inspector certificado."
-    try:
-        cliente = anthropic.Anthropic(api_key=api_key)
-        respuesta = cliente.messages.create(
-            model="claude-haiku-5-5",
-            max_tokens=400,
-            system=PROMPT_SISTEMA,
-            messages=[{"role": "user", "content": mensaje}],
-        )
-        return respuesta.content[0].text
-    except Exception:
-        return "No se pudo generar la recomendación automática. Consulte a un inspector certificado."
+    cliente = genai.Client(api_key=api_key)
+    config = types.GenerateContentConfig(system_instruction=PROMPT_SISTEMA,
+                                         max_output_tokens=600, temperature=0.3)
+    ultimo_error = ""
+    for nombre_modelo in MODELOS_GEMINI:
+        try:
+            respuesta = cliente.models.generate_content(
+                model=nombre_modelo, contents=mensaje, config=config)
+            if respuesta.text:
+                return respuesta.text
+        except Exception as e:
+            ultimo_error = str(e)[:150]
+    return ("No se pudo generar la recomendación automática. Consulte a un inspector certificado.\n\n"
+            f"_Detalle técnico: {ultimo_error}_")
 
 
 # ---------- 3. Interfaz ----------
