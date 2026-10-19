@@ -2,7 +2,7 @@
 
 Aplicación web que clasifica fotos de álabes de motores de avión en 5 clases (sin defecto, ablación, ruptura, fractura y ranura) usando *transfer learning*, y genera una recomendación de mantenimiento con un modelo de lenguaje.
 
-**App publicada:** _(agregar link de Streamlit Cloud)_
+**App publicada:** https://inspeccion-alabes.streamlit.app
 
 ## Flujo
 
