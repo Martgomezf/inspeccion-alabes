@@ -107,7 +107,10 @@ def recomendar(clase, confianza, resultados, revision):
     api_key = obtener_api_key()
     if not api_key:
         return "Falta configurar la API key del LLM. Consulte a un inspector certificado."
-    cliente = genai.Client(api_key=api_key)
+    # Tiempo máximo de 40 s y pocos reintentos, para que la app no quede esperando indefinidamente
+    cliente = genai.Client(api_key=api_key, http_options=types.HttpOptions(
+        timeout=40000,
+        retry_options=types.HttpRetryOptions(attempts=2, initial_delay=1, max_delay=4)))
     config = types.GenerateContentConfig(system_instruction=PROMPT_SISTEMA,
                                          max_output_tokens=2048, temperature=0.3)
     ultimo_error = ""
