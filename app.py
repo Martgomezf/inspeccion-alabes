@@ -109,7 +109,7 @@ def recomendar(clase, confianza, resultados, revision):
         return "Falta configurar la API key del LLM. Consulte a un inspector certificado."
     cliente = genai.Client(api_key=api_key)
     config = types.GenerateContentConfig(system_instruction=PROMPT_SISTEMA,
-                                         max_output_tokens=600, temperature=0.3)
+                                         max_output_tokens=2048, temperature=0.3)
     ultimo_error = ""
     for nombre_modelo in MODELOS_GEMINI:
         try:
